@@ -43,6 +43,8 @@ public class Mine implements ConfigurationSerializable {
 	private int tpX = 0;
 	private int tpY = -1;
 	private int tpZ = 0;
+	private int tpYaw = 0;
+	private int tpPitch = 0;
 
 	public Mine(int minX, int minY, int minZ, int maxX, int maxY, int maxZ, String name, World world) {
 		this.minX = minX;
@@ -142,11 +144,15 @@ public class Mine implements ConfigurationSerializable {
 		if (me.containsKey("ignoreLadders")) {
 			ignoreLadders = (Boolean) me.get("ignoreLadders");
 		}
-		if (me.containsKey("tpY")) { // Should contain all three if it contains
-										// this one
-			tpX = (Integer) me.get("tpX");
-			tpY = (Integer) me.get("tpY");
-			tpZ = (Integer) me.get("tpZ");
+		if (me.containsKey("tpY")) { // Should contain all three if it contains this one
+			tpX = (int) me.get("tpX");
+			tpY = (int) me.get("tpY");
+			tpZ = (int) me.get("tpZ");
+		}
+		
+		if (me.containsKey("tpYaw")) {
+			tpYaw = (int) me.get("tpYaw");
+			tpPitch =  (int) me.get("tpPitch");
 		}
 		
 		if (updated) {
@@ -188,6 +194,8 @@ public class Mine implements ConfigurationSerializable {
 		me.put("tpX", tpX);
 		me.put("tpY", tpY);
 		me.put("tpZ", tpZ);
+		me.put("tpYaw", tpYaw);
+		me.put("tpPitch", tpPitch);
 		return me;
 	}
 
@@ -322,10 +330,12 @@ public class Mine implements ConfigurationSerializable {
 		tpX = l.getBlockX();
 		tpY = l.getBlockY();
 		tpZ = l.getBlockZ();
+		tpYaw = (int) l.getYaw();
+		tpPitch = (int) l.getPitch();
 	}
 
 	public Location getTpPos() {
-		return new Location(getWorld(), tpX, tpY, tpZ);
+		return new Location(getWorld(), tpX, tpY, tpZ, tpYaw, tpPitch);
 	}
 
 	public boolean isInside(Player p) {
@@ -353,8 +363,7 @@ public class Mine implements ConfigurationSerializable {
 
 					// check to make sure we don't suffocate player
 					if (block.getType() != Material.AIR || block.getRelative(BlockFace.UP).getType() != Material.AIR) {
-						tp = new Location(world, l.getX(),
-								l.getWorld().getHighestBlockYAt(l.getBlockX(), l.getBlockZ()), l.getZ());
+						tp = new Location(world, l.getX(), l.getWorld().getHighestBlockYAt(l.getBlockX(), l.getBlockZ()), l.getZ());
 					}
 					p.teleport(tp);
 				}
@@ -449,18 +458,22 @@ public class Mine implements ConfigurationSerializable {
 	}
 
 	public void teleport(Player player) {
-		Location max = new Location(world, Math.max(this.maxX, this.minX), this.maxY, Math.max(this.maxZ, this.minZ));
-		Location min = new Location(world, Math.min(this.maxX, this.minX), this.minY, Math.min(this.maxZ, this.minZ));
+		Location location = null;
+		
+		if (!getTpPos().equals(new Location(world, 0, -1, 0))) {
+			location = getTpPos();
+		} else {
+			Location max = new Location(world, Math.max(this.maxX, this.minX), this.maxY, Math.max(this.maxZ, this.minZ));
+			Location min = new Location(world, Math.min(this.maxX, this.minX), this.minY, Math.min(this.maxZ, this.minZ));
 
-		Location location = max.add(min).multiply(0.5);
-		Block block = location.getBlock();
+			location = max.add(min).multiply(0.5);
+			Block block = location.getBlock();
 
-		if (block.getType() != Material.AIR || block.getRelative(BlockFace.UP).getType() != Material.AIR) {
-			location = new Location(world, location.getX(),
-					location.getWorld().getHighestBlockYAt(location.getBlockX(), location.getBlockZ()),
-					location.getZ());
+			if (block.getType() != Material.AIR || block.getRelative(BlockFace.UP).getType() != Material.AIR) {
+				location = new Location(world, location.getX(), location.getWorld().getHighestBlockYAt(location.getBlockX(), location.getBlockZ()), location.getZ());
+			}
 		}
-
+		
 		player.teleport(location);
 	}
 
