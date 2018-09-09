@@ -45,8 +45,7 @@ public class CommandManager {
 		}
 	}
 
-	@Command(aliases = { "help",
-			"?" }, description = "Provide information about MineResetLite commands", min = 0, max = -1)
+	@Command(aliases = { "help", "?" }, description = "Provide information about MineResetLite commands", min = 0, max = -1)
 	public void help(CommandSender sender, String[] args) {
 		if (args.length >= 1) {
 			// Subcommand help?
