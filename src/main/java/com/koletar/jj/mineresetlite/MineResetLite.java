@@ -151,9 +151,6 @@ public class MineResetLite extends JavaPlugin {
 	public void onDisable() {
 		getServer().getScheduler().cancelTask(resetTaskId);
 		getServer().getScheduler().cancelTask(saveTaskId);
-		
-		save();
-		
 		HandlerList.unregisterAll(this);
 		logger.info("MineResetLite disabled");
 	}

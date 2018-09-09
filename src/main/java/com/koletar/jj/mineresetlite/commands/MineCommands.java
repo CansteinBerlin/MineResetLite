@@ -2,6 +2,8 @@ package com.koletar.jj.mineresetlite.commands;
 
 import static com.koletar.jj.mineresetlite.Phrases.phrase;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -286,15 +288,6 @@ public class MineCommands {
 			sender.sendMessage(phrase("notABlock"));
 			return;
 		}
-		byte data = 0;
-		if (bits.length == 2) {
-			try {
-				data = Byte.valueOf(bits[1]);
-			} catch (NumberFormatException nfe) {
-				sender.sendMessage(phrase("unknownBlock"));
-				return;
-			}
-		}
 		// Parse percentage
 		String percentageS = args[args.length - 1];
 		if (!percentageS.endsWith("%")) {
@@ -336,7 +329,16 @@ public class MineCommands {
 			return;
 		}
 		mines[0].getComposition().put(block, percentage);
-		sender.sendMessage(phrase("mineCompositionSet", mines[0], percentage * 100, block, (1 - mines[0].getCompositionTotal()) * 100));
+
+		DecimalFormat df = new DecimalFormat("##.0");
+		double totalPer = mines[0].getCompositionTotal() * 100;
+		String leftPer = df.format(100 - totalPer);
+		
+		if (100 - totalPer == 0) {
+			leftPer = "0.0";
+		}
+		
+		sender.sendMessage(phrase("mineCompositionSet", mines[0], df.format(percentage * 100), block, leftPer));
 		plugin.buffSave();
 	}
 
@@ -402,8 +404,7 @@ public class MineCommands {
 		}
 	}
 
-	@Command(aliases = { "flag", "f" }, description = "Set various properties of a mine, including automatic resets", help = { "Available flags:", "resetDelay: An integer number of minutes specifying the time between automatic resets. Set to 0 to disable automatic resets.", "resetWarnings: A comma separated list of integer minutes to warn before the automatic reset. Warnings must be less than the reset delay.", "surface: A block that will cover the entire top surface of the mine when reset, obscuring surface ores. Set surface to air to clear the value.", "fillMode: An alternate reset algorithm that will only \"reset\" air blocks inside your mine. Set to true or false.", "isSilent: A boolean (true or false) of whether or not this mine should broadcast a reset notification when it is reset *automatically*", "ignoreLadders: A boolean (true or false) of whether or not this mine should replaces ladders when resetting" }, usage = "<mine name> <setting> <value>", permissions = {
-			"mineresetlite.mine.flag" }, min = 3, max = -1, onlyPlayers = false)
+	@Command(aliases = { "flag", "f" }, description = "Set various properties of a mine, including automatic resets", help = { "Available flags:", "resetDelay: An integer number of minutes specifying the time between automatic resets. Set to 0 to disable automatic resets.", "resetWarnings: A comma separated list of integer minutes to warn before the automatic reset. Warnings must be less than the reset delay.", "surface: A block that will cover the entire top surface of the mine when reset, obscuring surface ores. Set surface to air to clear the value.", "fillMode: An alternate reset algorithm that will only \"reset\" air blocks inside your mine. Set to true or false.", "isSilent: A boolean (true or false) of whether or not this mine should broadcast a reset notification when it is reset *automatically*", "ignoreLadders: A boolean (true or false) of whether or not this mine should replaces ladders when resetting" }, usage = "<mine name> <setting> <value>", permissions = {"mineresetlite.mine.flag" }, min = 3, max = -1, onlyPlayers = false)
 	public void flag(CommandSender sender, String[] args) {
 		Mine[] mines = plugin.matchMines(StringTools.buildSpacedArgument(args, 2));
 		if (mines.length > 1) {
@@ -595,6 +596,7 @@ public class MineCommands {
 			return;
 		}
 		mines[0].setTpPos(player.getLocation());
+		plugin.buffSave();
 		sender.sendMessage(phrase("tpPosSet", mines[0]));
 		return;
 	}
@@ -611,6 +613,7 @@ public class MineCommands {
 			return;
 		}
 		mines[0].setTpPos(new Location(player.getWorld(), 0, -1, 0));
+		plugin.buffSave();
 		sender.sendMessage(phrase("tpPosRemove", mines[0]));
 		return;
 	}
