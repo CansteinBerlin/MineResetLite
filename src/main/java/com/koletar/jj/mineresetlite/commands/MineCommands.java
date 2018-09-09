@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -21,8 +22,10 @@ import com.koletar.jj.mineresetlite.Mine;
 import com.koletar.jj.mineresetlite.MineResetLite;
 import com.koletar.jj.mineresetlite.SerializableBlock;
 import com.koletar.jj.mineresetlite.StringTools;
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+import com.sk89q.worldedit.regions.Region;
 
 /**
  * @author jjkoletar
@@ -51,19 +54,10 @@ public class MineCommands {
 					"mineresetlite.mine.create", "mineresetlite.mine.redefine" }, min = 0, max = 1, onlyPlayers = true)
 	public void setPoint1(CommandSender sender, String[] args) throws InvalidCommandArgumentsException {
 		Player player = (Player) sender;
-		if (args.length == 0) {
-			// Use block being looked at
-			point1.put(player, player.getTargetBlock((HashSet<Byte>) null, 100).getLocation());
-			player.sendMessage(phrase("firstPointSet"));
-			return;
-		} else if (args[0].equalsIgnoreCase("-feet")) {
-			// Use block being stood on
-			point1.put(player, player.getLocation());
-			player.sendMessage(phrase("firstPointSet"));
-			return;
-		}
-		// Args weren't empty or -feet, bad args
-		throw new InvalidCommandArgumentsException();
+		// Use block being stood on
+		point1.put(player, player.getLocation());
+		player.sendMessage(phrase("firstPointSet"));
+		return;
 	}
 
 	@Command(aliases = { "pos2", "p2" }, description = "Change your first selection point", help = {
@@ -72,19 +66,10 @@ public class MineCommands {
 					"mineresetlite.mine.create", "mineresetlite.mine.redefine" }, min = 0, max = 1, onlyPlayers = true)
 	public void setPoint2(CommandSender sender, String[] args) throws InvalidCommandArgumentsException {
 		Player player = (Player) sender;
-		if (args.length == 0) {
-			// Use block being looked at
-			point2.put(player, player.getTargetBlock((HashSet<Byte>) null, 100).getLocation());
-			player.sendMessage(phrase("secondPointSet"));
-			return;
-		} else if (args[0].equalsIgnoreCase("-feet")) {
-			// Use block being stood on
-			point2.put(player, player.getLocation());
-			player.sendMessage(phrase("secondPointSet"));
-			return;
-		}
-		// Args weren't empty or -feet, bad args
-		throw new InvalidCommandArgumentsException();
+		// Use block being stood on
+		point2.put(player, player.getLocation());
+		player.sendMessage(phrase("secondPointSet"));
+		return;
 	}
 
 	@Command(aliases = { "create",
@@ -95,6 +80,9 @@ public class MineCommands {
 	public void createMine(CommandSender sender, String[] args) {
 		// Find out how they selected the region
 		Player player = (Player) sender;
+		
+		
+		
 		World world = null;
 		Vector p1 = null;
 		Vector p2 = null;
@@ -109,13 +97,21 @@ public class MineCommands {
 			p2 = point2.get(player).toVector();
 		}
 		// WorldEdit?
-		if (plugin.hasWorldEdit() && plugin.getWorldEdit().getSelection(player) != null) {
-			WorldEditPlugin worldEdit = plugin.getWorldEdit();
-			Selection selection = worldEdit.getSelection(player);
-			world = selection.getWorld();
-			p1 = selection.getMinimumPoint().toVector();
-			p2 = selection.getMaximumPoint().toVector();
+		
+		Region selection;
+		try {
+			selection = plugin.getWorldEdit().getSession(player).getSelection(new BukkitPlayer(plugin.getWorldEdit(), player).getWorld());
+			if (plugin.hasWorldEdit() && selection != null) {
+				WorldEditPlugin worldEdit = plugin.getWorldEdit();
+				world = Bukkit.getWorld(selection.getWorld().getName());
+				p1 = new Vector(selection.getMinimumPoint().getBlockX(), selection.getMinimumPoint().getBlockY(), selection.getMinimumPoint().getBlockZ());
+				p2 = new Vector(selection.getMaximumPoint().getBlockX(), selection.getMaximumPoint().getBlockY(), selection.getMaximumPoint().getBlockZ());
+			}
+		} catch (IncompleteRegionException e) {
+			e.printStackTrace();
 		}
+		
+		
 		if (p1 == null) {
 			player.sendMessage(phrase("emptySelection"));
 			return;
@@ -174,12 +170,17 @@ public class MineCommands {
 			p2 = point2.get(player).toVector();
 		}
 		// WorldEdit?
-		if (plugin.hasWorldEdit() && plugin.getWorldEdit().getSelection(player) != null) {
-			WorldEditPlugin worldEdit = plugin.getWorldEdit();
-			Selection selection = worldEdit.getSelection(player);
-			world = selection.getWorld();
-			p1 = selection.getMinimumPoint().toVector();
-			p2 = selection.getMaximumPoint().toVector();
+		Region selection;
+		try {
+			selection = plugin.getWorldEdit().getSession(player).getSelection(new BukkitPlayer(plugin.getWorldEdit(), player).getWorld());
+			if (plugin.hasWorldEdit() && selection != null) {
+				WorldEditPlugin worldEdit = plugin.getWorldEdit();
+				world = Bukkit.getWorld(selection.getWorld().getName());
+				p1 = new Vector(selection.getMinimumPoint().getBlockX(), selection.getMinimumPoint().getBlockY(), selection.getMinimumPoint().getBlockZ());
+				p2 = new Vector(selection.getMaximumPoint().getBlockX(), selection.getMaximumPoint().getBlockY(), selection.getMaximumPoint().getBlockZ());
+			}
+		} catch (IncompleteRegionException e) {
+			e.printStackTrace();
 		}
 		if (p1 == null) {
 			player.sendMessage(phrase("emptySelection"));
@@ -263,11 +264,7 @@ public class MineCommands {
 		for (Map.Entry<SerializableBlock, Double> entry : mine.getComposition().entrySet()) {
 			csb.append(entry.getValue() * 100);
 			csb.append("% ");
-			csb.append(Material.getMaterial(entry.getKey().getBlockId()).toString());
-			if (entry.getKey().getData() != 0) {
-				csb.append(":");
-				csb.append(entry.getKey().getData());
-			}
+			csb.append(entry.getKey().getBlock().toString());
 			csb.append(", ");
 		}
 		if (csb.length() > 2) {
@@ -345,7 +342,7 @@ public class MineCommands {
 			return;
 		}
 		percentage = percentage / 100; // Make it a programmatic percentage
-		SerializableBlock block = new SerializableBlock(m.getId(), data);
+		SerializableBlock block = new SerializableBlock(m);
 		Double oldPercentage = mines[0].getComposition().get(block);
 		double total = 0;
 		for (Map.Entry<SerializableBlock, Double> entry : mines[0].getComposition().entrySet()) {
@@ -404,7 +401,7 @@ public class MineCommands {
 			}
 		}
 		// Does the mine contain this block?
-		SerializableBlock block = new SerializableBlock(m.getId(), data);
+		SerializableBlock block = new SerializableBlock(m);
 		for (Map.Entry<SerializableBlock, Double> entry : mines[0].getComposition().entrySet()) {
 			if (entry.getKey().equals(block)) {
 				mines[0].getComposition().remove(entry.getKey());
@@ -542,7 +539,7 @@ public class MineCommands {
 				plugin.buffSave();
 				return;
 			}
-			SerializableBlock block = new SerializableBlock(m.getId(), data);
+			SerializableBlock block = new SerializableBlock(m);
 			mines[0].setSurface(block);
 			sender.sendMessage(phrase("surfaceBlockSet", mines[0]));
 			plugin.buffSave();

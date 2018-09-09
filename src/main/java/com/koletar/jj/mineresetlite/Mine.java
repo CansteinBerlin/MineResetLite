@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,6 +17,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+
+import de.themoep.idconverter.IdMappings;
 
 /**
  * @author jjkoletar
@@ -55,6 +58,8 @@ public class Mine implements ConfigurationSerializable {
 	}
 
 	public Mine(Map<String, Object> me) {
+		boolean updated = false;
+		
 		try {
 			minX = (Integer) me.get("minX");
 			minY = (Integer) me.get("minY");
@@ -81,8 +86,26 @@ public class Mine implements ConfigurationSerializable {
 		try {
 			Map<String, Double> sComposition = (Map<String, Double>) me.get("composition");
 			composition = new HashMap<SerializableBlock, Double>();
-			for (Map.Entry<String, Double> entry : sComposition.entrySet()) {
-				composition.put(new SerializableBlock(entry.getKey()), entry.getValue());
+			for (Map.Entry<String, Double> entry : sComposition.entrySet()) {				
+				String matID = entry.getKey();
+				
+				if (matID.contains(":")) {
+					matID = IdMappings.getById(matID).getFlatteningType();
+					
+					updated = true;
+				} else {
+					if (StringUtils.isNumeric(matID)) {
+						matID = IdMappings.getById(matID).getFlatteningType();
+						updated = true;
+					}
+				}
+				
+				if (StringUtils.isNumeric(matID) || matID.contains(":")) {
+					Bukkit.getLogger().warning("Mine composition entry: '" + entry.getKey() + "' has been skipped. Material not found");
+					continue;
+				}
+				
+				composition.put(new SerializableBlock(matID), entry.getValue());
 			}
 		} catch (Throwable t) {
 			throw new IllegalArgumentException("Error deserializing composition");
@@ -124,6 +147,10 @@ public class Mine implements ConfigurationSerializable {
 			tpX = (Integer) me.get("tpX");
 			tpY = (Integer) me.get("tpY");
 			tpZ = (Integer) me.get("tpZ");
+		}
+		
+		if (updated) {
+			MineResetLite.instance.buffSave();
 		}
 	}
 
@@ -338,20 +365,19 @@ public class Mine implements ConfigurationSerializable {
 		for (int x = minX; x <= maxX; ++x) {
 			for (int y = minY; y <= maxY; ++y) {
 				for (int z = minZ; z <= maxZ; ++z) {
-					if (!fillMode || world.getBlockTypeIdAt(x, y, z) == 0) {
-						if (world.getBlockTypeIdAt(x, y, z) == 65 & ignoreLadders) {
+					if (!fillMode || world.getBlockAt(x, y, z).getType() == Material.AIR) {
+						if (world.getBlockAt(x, y, z).getType() == Material.LADDER & ignoreLadders) {
 							continue;
 						}
 
 						if (y == maxY && surface != null) {
-							world.getBlockAt(x, y, z).setTypeIdAndData(surface.getBlockId(), surface.getData(), false);
+							world.getBlockAt(x, y, z).setType(surface.getBlock(), false);
 							continue;
 						}
 						double r = rand.nextDouble();
 						for (CompositionEntry ce : probabilityMap) {
 							if (r <= ce.getChance()) {
-								world.getBlockAt(x, y, z).setTypeIdAndData(ce.getBlock().getBlockId(),
-										ce.getBlock().getData(), false);
+								world.getBlockAt(x, y, z).setType(ce.getBlock().getBlock(), false);
 								break;
 							}
 						}
@@ -410,7 +436,7 @@ public class Mine implements ConfigurationSerializable {
 		}
 		// Pad the remaining percentages with air
 		if (max < 1) {
-			composition.put(new SerializableBlock(0), 1 - max);
+			composition.put(new SerializableBlock(Material.AIR), 1 - max);
 			max = 1;
 		}
 		double i = 0;

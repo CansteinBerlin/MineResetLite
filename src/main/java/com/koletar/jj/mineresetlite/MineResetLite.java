@@ -171,7 +171,7 @@ public class MineResetLite extends JavaPlugin {
 		} else if (name.equalsIgnoreCase("coalore")) {
 			return Material.COAL_ORE;
 		} else if (name.equalsIgnoreCase("cake") || name.equalsIgnoreCase("cakeblock")) {
-			return Material.CAKE_BLOCK;
+			return Material.CAKE;
 		} else if (name.equalsIgnoreCase("emeraldore")) {
 			return Material.EMERALD_ORE;
 		} else if (name.equalsIgnoreCase("emeraldblock")) {
@@ -329,9 +329,9 @@ public class MineResetLite extends JavaPlugin {
 			mine.setResetDelay(0);
 
 			for (String blockComposition : config.getStringList("Blocks")) {
-				int id = Material.getMaterial(blockComposition.split("@")[0]).getId();
+				Material type = Material.getMaterial(blockComposition.split("@")[0]);
 				int percentage = Integer.valueOf(blockComposition.split("@")[1].split(":")[1]);
-				mine.getComposition().put(new SerializableBlock(id), Double.valueOf("0." + percentage));
+				mine.getComposition().put(new SerializableBlock(type), Double.valueOf("0." + percentage));
 			}
 
 			Bukkit.getLogger().info("[MineResetLite] Converted " + file.getName() + ", deleting file...");

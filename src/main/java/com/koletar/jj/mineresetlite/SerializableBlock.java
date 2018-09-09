@@ -1,49 +1,31 @@
 package com.koletar.jj.mineresetlite;
 
+import org.bukkit.Material;
+
 /**
  * @author jjkoletar
  */
 public class SerializableBlock {
-	private int blockId;
-	private byte data;
+	private Material blockType;
 
-	public SerializableBlock(int blockId) {
-		this.blockId = blockId;
-		data = 0;
+	public SerializableBlock(Material blockType) {
+		this.blockType = blockType;
+	}
+	
+	public SerializableBlock(String blockType) {
+		this.blockType = Material.valueOf(blockType);
 	}
 
-	public SerializableBlock(int blockId, byte data) {
-		this.blockId = blockId;
-		this.data = data;
-	}
-
-	public SerializableBlock(String self) {
-		String[] bits = self.split(":");
-		if (bits.length != 2) {
-			throw new IllegalArgumentException("String form of SerializableBlock didn't have exactly 2 numbers");
-		}
-		try {
-			blockId = Integer.valueOf(bits[0]);
-			data = Byte.valueOf(bits[1]);
-		} catch (NumberFormatException nfe) {
-			throw new IllegalArgumentException("Unable to convert id to integer and data to byte");
-		}
-	}
-
-	public int getBlockId() {
-		return blockId;
-	}
-
-	public byte getData() {
-		return data;
+	public Material getBlock() {
+		return blockType;
 	}
 
 	public String toString() {
-		return blockId + ":" + data;
+		return blockType.toString();
 	}
 
 	public boolean equals(Object o) {
 		return o instanceof SerializableBlock
-				&& (this.blockId == ((SerializableBlock) o).blockId && this.data == ((SerializableBlock) o).data);
+				&& (this.blockType == ((SerializableBlock) o).blockType);
 	}
 }
