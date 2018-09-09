@@ -46,7 +46,7 @@ public class MineCommands {
 		sender.sendMessage(phrase("mineList", StringTools.buildList(plugin.mines, "&c", "&d, ")));
 	}
 
-	@Command(aliases = { "pos1", "p1" }, description = "Change your first selection point", help = { "Run this command to set your first selection point to the block you are looking at.", "Use /mrl pos1 -feet to set your first point to the location you are standing on." }, usage = "(-feet)", permissions = { "mineresetlite.mine.create", "mineresetlite.mine.redefine" }, min = 0, max = 1, onlyPlayers = true)
+	@Command(aliases = { "pos1", "p1" }, description = "Change your first selection point", help = { "Run this command to set your first selection point to the block you are looking at.", "Use /mrl pos1 -feet to set your first point to the location you are standing on." }, permissions = { "mineresetlite.mine.create", "mineresetlite.mine.redefine" }, min = 0, max = 1, onlyPlayers = true)
 	public void setPoint1(CommandSender sender, String[] args) throws InvalidCommandArgumentsException {
 		Player player = (Player) sender;
 		// Use block being stood on
@@ -55,7 +55,7 @@ public class MineCommands {
 		return;
 	}
 
-	@Command(aliases = { "pos2", "p2" }, description = "Change your first selection point", help = { "Run this command to set your second selection point to the block you are looking at.", "Use /mrl pos2 -feet to set your second point to the location you are standing on." }, usage = "(-feet)", permissions = { "mineresetlite.mine.create", "mineresetlite.mine.redefine" }, min = 0, max = 1, onlyPlayers = true)
+	@Command(aliases = { "pos2", "p2" }, description = "Change your first selection point", help = { "Run this command to set your second selection point to the block you are looking at.", "Use /mrl pos2 -feet to set your second point to the location you are standing on." }, permissions = { "mineresetlite.mine.create", "mineresetlite.mine.redefine" }, min = 0, max = 1, onlyPlayers = true)
 	public void setPoint2(CommandSender sender, String[] args) throws InvalidCommandArgumentsException {
 		Player player = (Player) sender;
 		// Use block being stood on
