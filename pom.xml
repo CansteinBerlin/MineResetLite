@@ -14,6 +14,10 @@
 			<id>spigotmc-repo</id>
 			<url>http://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
+		<repository>
+			<id>sk89q-repo</id>
+			<url>http://maven.sk89q.com/repo/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -25,11 +29,9 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q.worldedit</groupId>
-			<artifactId>WorldEdit</artifactId>
+			<artifactId>worldedit-bukkit</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
-			<scope>system</scope>
-			<optional>true</optional>
-			<systemPath>${project.basedir}/lib/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar</systemPath>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
