@@ -55,8 +55,8 @@ public class Mine implements ConfigurationSerializable {
 		this.maxZ = maxZ;
 		this.name = name;
 		this.world = world;
-		composition = new HashMap<SerializableBlock, Double>();
-		resetWarnings = new LinkedList<Integer>();
+		composition = new HashMap<>();
+		resetWarnings = new LinkedList<>();
 	}
 
 	public Mine(Map<String, Object> me) {
@@ -87,7 +87,7 @@ public class Mine implements ConfigurationSerializable {
 		}
 		try {
 			Map<String, Double> sComposition = (Map<String, Double>) me.get("composition");
-			composition = new HashMap<SerializableBlock, Double>();
+			composition = new HashMap<>();
 			for (Map.Entry<String, Double> entry : sComposition.entrySet()) {				
 				String matID = entry.getKey();
 				
@@ -161,7 +161,7 @@ public class Mine implements ConfigurationSerializable {
 	}
 
 	public Map<String, Object> serialize() {
-		Map<String, Object> me = new HashMap<String, Object>();
+		Map<String, Object> me = new HashMap<>();
 		me.put("minX", minX);
 		me.put("minY", minY);
 		me.put("minZ", minZ);
@@ -170,14 +170,14 @@ public class Mine implements ConfigurationSerializable {
 		me.put("maxZ", maxZ);
 		me.put("world", world.getName());
 		// Make string form of composition
-		Map<String, Double> sComposition = new HashMap<String, Double>();
+		Map<String, Double> sComposition = new HashMap<>();
 		for (Map.Entry<SerializableBlock, Double> entry : composition.entrySet()) {
 			sComposition.put(entry.getKey().toString(), entry.getValue());
 		}
 		me.put("composition", sComposition);
 		me.put("name", name);
 		me.put("resetDelay", resetDelay);
-		List<String> warnings = new LinkedList<String>();
+		List<String> warnings = new LinkedList<>();
 		for (Integer warning : resetWarnings) {
 			warnings.add(warning.toString());
 		}

@@ -1,15 +1,10 @@
 package com.koletar.jj.mineresetlite.commands;
 
-import static com.koletar.jj.mineresetlite.Phrases.phrase;
-
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import com.koletar.jj.mineresetlite.*;
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,16 +13,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import com.koletar.jj.mineresetlite.Command;
-import com.koletar.jj.mineresetlite.InvalidCommandArgumentsException;
-import com.koletar.jj.mineresetlite.Mine;
-import com.koletar.jj.mineresetlite.MineResetLite;
-import com.koletar.jj.mineresetlite.SerializableBlock;
-import com.koletar.jj.mineresetlite.StringTools;
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.regions.Region;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import static com.koletar.jj.mineresetlite.Phrases.phrase;
 
 /**
  * @author jjkoletar
@@ -39,8 +31,8 @@ public class MineCommands {
 
 	public MineCommands(MineResetLite plugin) {
 		this.plugin = plugin;
-		point1 = new HashMap<Player, Location>();
-		point2 = new HashMap<Player, Location>();
+		point1 = new HashMap<>();
+		point2 = new HashMap<>();
 	}
 
 	@Command(aliases = { "list", "l" }, description = "List the names of all Mines", permissions = { "mineresetlite.mine.list" }, help = { "List the names of all Mines currently created, across all worlds." }, min = 0, max = 0, onlyPlayers = false)

@@ -1,18 +1,8 @@
 package com.koletar.jj.mineresetlite;
 
-import static com.koletar.jj.mineresetlite.Phrases.phrase;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.logging.Logger;
-
+import com.koletar.jj.mineresetlite.commands.MineCommands;
+import com.koletar.jj.mineresetlite.commands.PluginCommands;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -21,18 +11,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 
-import com.koletar.jj.mineresetlite.commands.MineCommands;
-import com.koletar.jj.mineresetlite.commands.PluginCommands;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @author jjkoletar
@@ -74,7 +62,7 @@ public class MineResetLite extends JavaPlugin {
 
 	public void onEnable() {
 		MineResetLite.instance = this;
-		mines = new ArrayList<Mine>();
+		mines = new ArrayList<>();
 		logger = getLogger();
 		Bukkit.getLogger().info("[MineResetLite] MRL is managed and developed by Boomclaw under the Apache 2.0 license.");
 		Bukkit.getLogger().info("[MineResetLite] For any issues or suggestions, use the Spigot discussion thread. Do not PM any of the developers.");

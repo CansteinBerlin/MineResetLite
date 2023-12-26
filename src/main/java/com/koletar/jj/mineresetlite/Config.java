@@ -46,8 +46,7 @@ public class Config {
     public static void writeBroadcastNearbyOnly(BufferedWriter out) throws IOException {
         out.write("# If you only want players nearby the mines to receive reset notifications,");
         out.newLine();
-        out.write(
-                "# and automatic reset warnings, set this to true. Note: Currently only broadcasts to players in the mine");
+        out.write("# and automatic reset warnings, set this to true. Note: Currently only broadcasts to players in the mine");
         out.newLine();
         out.write("broadcast-nearby-only: false");
         out.newLine();
@@ -69,23 +68,22 @@ public class Config {
     public static void writeLocale(BufferedWriter out) throws IOException {
         out.write("# MineResetLite supports multiple languages. Indicate the language to be used here.");
         out.newLine();
-        out.write(
-                "# Languages available at the time this config was generated: Danish (thanks Beijiru), Spanish (thanks enetocs), Portuguese (thanks FelipeMarques14), Italian (thanks JoLong)");
+        out.write("# Languages available at the time this config was generated: Danish (thanks Beijiru), Spanish (thanks enetocs), Portuguese (thanks FelipeMarques14), Italian (thanks JoLong)");
         out.newLine();
-        out.write(
-                "# Use the following values for these languages: English: 'en', Danish: 'da', Spanish: 'es', Portuguese: 'pt', Italian: 'it', French: 'fr', Dutch: 'nl', Polish: 'pl'");
+        out.write("# Use the following values for these languages: English: 'en', Danish: 'da', Spanish: 'es', Portuguese: 'pt', Italian: 'it', French: 'fr', Dutch: 'nl', Polish: 'pl'");
         out.newLine();
-        out.write(
-                "# A fully up-to-date list of languages is available at http://dev.bukkit.org/server-mods/mineresetlite/pages/internationalization/");
+        out.write("# A fully up-to-date list of languages is available at http://dev.bukkit.org/server-mods/mineresetlite/pages/internationalization/");
         out.newLine();
         out.write("locale: en");
         out.newLine();
     }
 
     public static void initConfig(File dataFolder) throws IOException {
+        
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
         }
+        
         File configFile = new File(dataFolder, "config.yml");
         if (!configFile.exists()) {
             configFile.createNewFile();
@@ -97,8 +95,10 @@ public class Config {
             Config.writeLocale(out);
             out.close();
         }
+        
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         BufferedWriter out = new BufferedWriter(new FileWriter(configFile, true));
+        
         if (config.contains("broadcast-in-world-only")) {
             Config.setBroadcastInWorldOnly(config.getBoolean("broadcast-in-world-only"));
         } else {

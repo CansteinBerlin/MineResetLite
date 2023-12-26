@@ -26,8 +26,8 @@ public class CommandManager {
 	private Map<Method, Object> instances;
 
 	public CommandManager() {
-		commands = new HashMap<String, Method>();
-		instances = new HashMap<Method, Object>();
+		commands = new HashMap<>();
+		instances = new HashMap<>();
 	}
 
 	public void register(Class<?> cls, Object obj) {
@@ -58,7 +58,7 @@ public class CommandManager {
 				return;
 			}
 		}
-		List<Method> seenMethods = new LinkedList<Method>();
+		List<Method> seenMethods = new LinkedList<>();
 		for (Map.Entry<String, Method> entry : commands.entrySet()) {
 			if (!seenMethods.contains(entry.getValue())) {
 				seenMethods.add(entry.getValue());
