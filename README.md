@@ -1,7 +1,8 @@
 # MineResetLite
 
 [MineResetLite](https://dev.bukkit.org/projects/mineresetlite) is the successor to _MineReset_, which provides tools 
-to create, reset, and maintain randomly generated mines, such as the mines seen on Prison/Survival/Citybuild Servers.
+to create, reset, and maintain randomly generated mines, such as the mines seen on Prison / Survival / Citybuild 
+servers.
 
 ![Preview](https://github.com/CansteinBerlin/MineResetLite/assets/4140635/d6dad3f2-5075-4386-9c0d-c096d3e982dc)
 
@@ -10,7 +11,7 @@ This is an **active** fork with new features, reworks and support for newer Mine
 **Tested version:** 1.19.4 PaperMC
 
 ## Documentation
-Original documentation for admins with **Command & Permission List**, **Docs about the plugin customization** and other 
+Original documentation for admins with **Command & Permission List**, **docs about the plugin customization** and other 
 infos:
 https://dev.bukkit.org/projects/mineresetlite/pages
 
