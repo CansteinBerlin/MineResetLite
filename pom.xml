@@ -1,63 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>xyz.boomclaw.plugins</groupId>
 	<artifactId>mineresetlite</artifactId>
-	<version>0.4.8</version>
+	<version>0.5.0</version>
 	<name>MineResetLite</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<release>17</release>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<repositories>
 		<repository>
-			<id>spigotmc-repo</id>
-			<url>http://hub.spigotmc.org/nexus/content/groups/public/</url>
+			<id>papermc</id>
+			<url>https://repo.papermc.io/repository/maven-public/</url>
 		</repository>
 		<repository>
-			<id>sk89q-repo</id>
-			<url>http://maven.sk89q.com/repo/</url>
+			<id>enginehub-maven</id>
+			<url>https://maven.enginehub.org/repo/</url>
 		</repository>
 	</repositories>
 
+<!--	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.intellectualsites.bom</groupId>
+				<artifactId>bom-1.18.x</artifactId>
+				<version>1.25</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>-->
+
 	<dependencies>
 		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<version>1.13.1-R0.1-SNAPSHOT</version>
+			<groupId>io.papermc.paper</groupId>
+			<artifactId>paper-api</artifactId>
+			<version>1.19.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q.worldedit</groupId>
 			<artifactId>worldedit-bukkit</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>7.2.9</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.14.0</version>
+		</dependency>
+<!--		<dependency>
+			<groupId>com.fastasyncworldedit</groupId>
+			<artifactId>FastAsyncWorldEdit-Core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fastasyncworldedit</groupId>
+			<artifactId>FastAsyncWorldEdit-Bukkit</artifactId>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>FastAsyncWorldEdit-Core</artifactId>
+					<groupId>*</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>-->
 	</dependencies>
-
-	<build>
-		<plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<archive>
-						<addMavenDescriptor>false</addMavenDescriptor>
-					</archive>
-					<finalName>${project.name}</finalName>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>

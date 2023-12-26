@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
